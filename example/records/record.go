@@ -58,9 +58,9 @@ func main() {
 	log.Println(record.Error)
 
 	log.Println("I do not like this record, want to remove it")
-	responseCode, err := hdns.DeleteRecord("1e960dc913f556d884bf01c241386103")
+	response, err := hdns.DeleteRecord("1e960dc913f556d884bf01c241386103")
 	if err != nil {
-		log.Fatalln(responseCode, err)
+		log.Fatalln(response.Error, err)
 	}
 
 	log.Println("Now you know how to work with library")

@@ -13,6 +13,10 @@ type HCloudAnswerGetRecords struct {
 	Error   HCloudError
 }
 
+type HCloudAnswerDeleteRecord struct {
+	Error HCloudError
+}
+
 type HCloudAnswerCreateRecords struct {
 	Records        []HCloudRecord `json:"records,omitempty"`
 	ValidRecords   []HCloudRecord `json:"valid_records,omitempty"`
@@ -35,6 +39,10 @@ type HCloudAnswerGetZone struct {
 type HCloudAnswerGetZones struct {
 	Zones []HCloudZone `json:"zones,omitempty"`
 	Meta  HCloudMeta   `json:"meta,omitempty"`
+	Error HCloudError
+}
+
+type HCloudAnswerDeleteZone struct {
 	Error HCloudError
 }
 

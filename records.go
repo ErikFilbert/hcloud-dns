@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -24,7 +23,6 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 	req.Header.Add("Auth-API-Token", d.token)
 
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
@@ -57,7 +55,6 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 	answer.Error = errorResult.Error
 
 	return answer, nil
-
 }
 
 // GetRecords retrieve all records of user.
@@ -90,7 +87,6 @@ func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRe
 	}
 
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return HCloudAnswerGetRecords{}, err
 	}
@@ -135,7 +131,6 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 		return HCloudAnswerGetRecord{}, err
 	}
 	body := bytes.NewBuffer(jsonRecordString)
-	log.Println(string(jsonRecordString))
 
 	client := &http.Client{}
 	req, err := http.NewRequest("PUT", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", record.ID), body)
@@ -147,7 +142,6 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	req.Header.Add("Auth-API-Token", d.token)
 
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
@@ -156,7 +150,6 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
-	log.Println(string(respBody), resp.StatusCode)
 
 	answer := HCloudAnswerGetRecord{}
 
@@ -181,34 +174,49 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	answer.Error = errorResult.Error
 
 	return answer, nil
-
 }
 
 // DeleteRecord remove record by ID.
 // Accepts single ID string.
-// Returns HTTP code and error. HTTP code 200 also raise error.
-func (d *HCloudDNS) DeleteRecord(ID string) (int, error) {
+// Returns HTTP code and error.
+func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", ID), nil)
 	if err != nil {
-		return 0, err
+		return HCloudAnswerDeleteRecord{}, err
 	}
 
 	req.Header.Add("Auth-API-Token", d.token)
 
 	resp, err := client.Do(req)
-
 	if err != nil {
-		return resp.StatusCode, err
+		return HCloudAnswerDeleteRecord{}, err
 	}
 
-	if resp.StatusCode != 200 {
-		return resp.StatusCode, fmt.Errorf("Status code is not 200")
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return HCloudAnswerDeleteRecord{}, err
 	}
 
-	return resp.StatusCode, nil
+	answer := HCloudAnswerDeleteRecord{}
 
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerDeleteRecord{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
+	return answer, nil
 }
 
 // CreateRecord creates new single record.
@@ -221,7 +229,6 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 		return HCloudAnswerGetRecord{}, err
 	}
 	body := bytes.NewBuffer(jsonRecordString)
-	log.Println(string(jsonRecordString))
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", record.ID), body)
@@ -233,7 +240,6 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	req.Header.Add("Auth-API-Token", d.token)
 
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
@@ -242,7 +248,6 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
-	log.Println(string(respBody), resp.StatusCode)
 
 	answer := HCloudAnswerGetRecord{}
 
@@ -267,7 +272,6 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	answer.Error = errorResult.Error
 
 	return answer, nil
-
 }
 
 // CreateRecordBulk creates many records at once.
@@ -280,7 +284,6 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 		return HCloudAnswerCreateRecords{}, err
 	}
 	body := bytes.NewBuffer(jsonRecordString)
-	log.Println(string(jsonRecordString))
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", "https://dns.hetzner.com/api/v1/api/v1/records/bulk", body)
@@ -292,7 +295,6 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 	req.Header.Add("Auth-API-Token", d.token)
 
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return HCloudAnswerCreateRecords{}, err
 	}
@@ -301,7 +303,6 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 	if err != nil {
 		return HCloudAnswerCreateRecords{}, err
 	}
-	log.Println(string(respBody), resp.StatusCode)
 
 	answer := HCloudAnswerCreateRecords{}
 
@@ -326,7 +327,6 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 	answer.Error = errorResult.Error
 
 	return answer, nil
-
 }
 
 // UpdateRecordBulk updates many records at once.
@@ -339,7 +339,6 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 		return HCloudAnswerUpdateRecords{}, err
 	}
 	body := bytes.NewBuffer(jsonRecordString)
-	log.Println(string(jsonRecordString))
 
 	client := &http.Client{}
 	req, err := http.NewRequest("PUT", "https://dns.hetzner.com/api/v1/api/v1/records/bulk", body)
@@ -351,7 +350,6 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 	req.Header.Add("Auth-API-Token", d.token)
 
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return HCloudAnswerUpdateRecords{}, err
 	}
@@ -360,7 +358,6 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 	if err != nil {
 		return HCloudAnswerUpdateRecords{}, err
 	}
-	log.Println(string(respBody), resp.StatusCode)
 
 	answer := HCloudAnswerUpdateRecords{}
 
@@ -385,5 +382,4 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 	answer.Error = errorResult.Error
 
 	return answer, nil
-
 }
