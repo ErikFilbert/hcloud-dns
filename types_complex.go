@@ -42,6 +42,12 @@ type HCloudAnswerGetZonePlainText struct {
 	Error         HCloudError
 }
 
+type HCloudAnswerZoneValidate struct {
+	ParsedRecords int          `json:"parsed_records,omitempty"`
+	ValidRecords  []HCloudZone `json:"valid_records,omitempty"`
+	Error         HCloudError
+}
+
 type HCloudAnswerGetZones struct {
 	Zones []HCloudZone `json:"zones,omitempty"`
 	Meta  HCloudMeta   `json:"meta,omitempty"`

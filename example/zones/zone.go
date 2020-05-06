@@ -32,6 +32,13 @@ func main() {
 	}
 	log.Println(zonePlainText.ZonePlainText)
 
+	log.Println("Validate plain text zone")
+	zoneValid, err := hdns.ValidateZoneString(zonePlainText.ZonePlainText)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(zoneValid.ValidRecords)
+
 	log.Println("Import zone to plain text")
 	zoneImport, err := hdns.ImportZoneString("vhSHpH5mjcB2UywP9XtZGh", zonePlainText.ZonePlainText)
 	if err != nil {

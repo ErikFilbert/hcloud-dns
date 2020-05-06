@@ -330,7 +330,7 @@ func (d *HCloudDNS) ImportZoneString(zoneID string, zonePlainText string) (HClou
 
 // ExportZoneToString exports single zone from imported text.
 // Accepts ID and zonePlainText strings.
-// Returns HCloudAnswerGetZone with HCloudZone and error.
+// Returns HCloudAnswerGetZonePlainText with HCloudZone and error.
 func (d *HCloudDNS) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error) {
 
 	client := &http.Client{}
@@ -354,6 +354,57 @@ func (d *HCloudDNS) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainT
 
 	answer := HCloudAnswerGetZonePlainText{}
 	answer.ZonePlainText = string(respBody)
+
+	return answer, nil
+}
+
+// ValidateZoneString validate single zone from imported text.
+// Accepts ID and zonePlainText strings.
+// Returns HCloudAnswerZoneValidate with HCloudZone and error.
+func (d *HCloudDNS) ValidateZoneString(zonePlainText string) (HCloudAnswerZoneValidate, error) {
+
+	body := strings.NewReader(zonePlainText)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/file/validate"), body)
+	if err != nil {
+		return HCloudAnswerZoneValidate{}, err
+	}
+
+	req.Header.Add("Content-Type", "text/plain")
+	req.Header.Add("Auth-API-Token", d.token)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return HCloudAnswerZoneValidate{}, err
+	}
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return HCloudAnswerZoneValidate{}, err
+	}
+
+	answer := HCloudAnswerZoneValidate{}
+
+	err = json.Unmarshal([]byte(respBody), &answer)
+	if err != nil {
+		return HCloudAnswerZoneValidate{}, err
+	}
+
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerZoneValidate{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
 
 	return answer, nil
 }
