@@ -1,6 +1,6 @@
 # Hetzner DNS golang library
 
-This library made to interact with Hetzner DNS API in most easy way. Hopefully in future it will be used for Hetzner external-dns provider.
+This library made to interact with Hetzner DNS API in most easy way. Hopefully in future it will be used for Hetzner external-dns provider. Check out [example](example) directory and [API_help.md](API_help.md).
 
 Get your own token on Hetzner DNS and place it to `token` variable and run code
 
