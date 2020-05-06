@@ -22,7 +22,7 @@ log.Println(allRecords.Records)
 log.Println(allRecords.Error)
 ```
 
-At this moment library under development, be patient.
+At this moment library supports all API requests. If you found some bug mail me or register here and create issue.
 
 ---
 Copyright by Vladimir Smagin (21h) 2020  

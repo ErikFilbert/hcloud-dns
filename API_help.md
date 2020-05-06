@@ -12,19 +12,55 @@ type HCloudAnswerCreateRecords struct {
 	Records        []HCloudRecord `json:"records,omitempty"`
 	ValidRecords   []HCloudRecord `json:"valid_records,omitempty"`
 	InvalidRecords []HCloudRecord `json:"invalid_records,omitempty"`
-	Error          HCloudError    `json:"error,omitempty"`
-	HTTPCode       int
+	Error          HCloudError
 }
 ```
 
+
+#### type HCloudAnswerDeleteRecord
+
+```go
+type HCloudAnswerDeleteRecord struct {
+	Error HCloudError
+}
+```
+
+
+#### type HCloudAnswerDeleteZone
+
+```go
+type HCloudAnswerDeleteZone struct {
+	Error HCloudError
+}
+```
+
+
+#### type HCloudAnswerError
+
+```go
+type HCloudAnswerError struct {
+	Error HCloudError `json:"error,omitempty"`
+}
+```
+
+sometime can be returned HCloudError
+
+#### type HCloudAnswerErrorString
+
+```go
+type HCloudAnswerErrorString struct {
+	Error string `json:"error,omitempty"`
+}
+```
+
+or plain string
 
 #### type HCloudAnswerGetRecord
 
 ```go
 type HCloudAnswerGetRecord struct {
-	Record   HCloudRecord `json:"record,omitempty"`
-	Error    HCloudError  `json:"error,omitempty"`
-	HTTPCode int
+	Record HCloudRecord `json:"record,omitempty"`
+	Error  HCloudError
 }
 ```
 
@@ -33,10 +69,9 @@ type HCloudAnswerGetRecord struct {
 
 ```go
 type HCloudAnswerGetRecords struct {
-	Records  []HCloudRecord `json:"records,omitempty"`
-	Meta     HCloudMeta     `json:"meta,omitempty"`
-	Error    HCloudError    `json:"error,omitempty"`
-	HTTPCode int
+	Records []HCloudRecord `json:"records,omitempty"`
+	Meta    HCloudMeta     `json:"meta,omitempty"`
+	Error   HCloudError
 }
 ```
 
@@ -45,9 +80,18 @@ type HCloudAnswerGetRecords struct {
 
 ```go
 type HCloudAnswerGetZone struct {
-	Zone     HCloudZone  `json:"zone,omitempty"`
-	Error    HCloudError `json:"error,omitempty"`
-	HTTPCode int
+	Zone  HCloudZone `json:"zone,omitempty"`
+	Error HCloudError
+}
+```
+
+
+#### type HCloudAnswerGetZonePlainText
+
+```go
+type HCloudAnswerGetZonePlainText struct {
+	ZonePlainText string `json:"zone,omitempty"`
+	Error         HCloudError
 }
 ```
 
@@ -56,10 +100,9 @@ type HCloudAnswerGetZone struct {
 
 ```go
 type HCloudAnswerGetZones struct {
-	Zones    []HCloudZone `json:"zones,omitempty"`
-	Meta     HCloudMeta   `json:"meta,omitempty"`
-	Error    HCloudError  `json:"error,omitempty"`
-	HTTPCode int
+	Zones []HCloudZone `json:"zones,omitempty"`
+	Meta  HCloudMeta   `json:"meta,omitempty"`
+	Error HCloudError
 }
 ```
 
@@ -70,8 +113,18 @@ type HCloudAnswerGetZones struct {
 type HCloudAnswerUpdateRecords struct {
 	Records        []HCloudRecord `json:"records,omitempty"`
 	InvalidRecords []HCloudRecord `json:"failed_records,omitempty"`
-	Error          HCloudError    `json:"error,omitempty"`
-	HTTPCode       int
+	Error          HCloudError
+}
+```
+
+
+#### type HCloudAnswerZoneValidate
+
+```go
+type HCloudAnswerZoneValidate struct {
+	ParsedRecords int          `json:"parsed_records,omitempty"`
+	ValidRecords  []HCloudZone `json:"valid_records,omitempty"`
+	Error         HCloudError
 }
 ```
 
@@ -98,8 +151,8 @@ New instance
 func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error)
 ```
 CreateRecord creates new single record. Accepts HCloudRecord with record to
-create, of cource no ID. Returns HCloudAnswerGetRecord with HTTPCode,
-HCloudRecord and error.
+create, of cource no ID. Returns HCloudAnswerGetRecord with HCloudRecord and
+error.
 
 #### func (*HCloudDNS) CreateRecordBulk
 
@@ -107,16 +160,41 @@ HCloudRecord and error.
 func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateRecords, error)
 ```
 CreateRecordBulk creates many records at once. Accepts array of HCloudRecord,
-converting to json and makes POST to Hetzner. Returns HCloudAnswerCreateRecords
-with HTTPCode, arrays of HCloudRecord with whole list, valid and invalid, error.
+converts it to json and makes POST to Hetzner. Returns HCloudAnswerCreateRecords
+with arrays of HCloudRecord with whole list, valid and invalid, error.
+
+#### func (*HCloudDNS) CreateZone
+
+```go
+func (d *HCloudDNS) CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error)
+```
+CreateZone creates new single zone. Accepts HCloudZone with record to create, of
+cource no ID. Returns HCloudAnswerGetZone with HCloudZone and error.
 
 #### func (*HCloudDNS) DeleteRecord
 
 ```go
-func (d *HCloudDNS) DeleteRecord(ID string) (int, error)
+func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error)
 ```
-DeleteRecord remove record by ID. Accepts single ID string. Returns HTTP code
-and error. HTTP code 200 also raise error.
+DeleteRecord remove record by ID. Accepts single ID string. Returns
+HCloudAnswerDeleteRecord and error.
+
+#### func (*HCloudDNS) DeleteZone
+
+```go
+func (d *HCloudDNS) DeleteZone(ID string) (HCloudAnswerDeleteZone, error)
+```
+DeleteZone remove zone by ID. Accepts single ID string. Returns
+HCloudAnswerDeleteZone with error.
+
+#### func (*HCloudDNS) ExportZoneToString
+
+```go
+func (d *HCloudDNS) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error)
+```
+ExportZoneToString exports single zone from imported text. Accepts ID and
+zonePlainText strings. Returns HCloudAnswerGetZonePlainText with HCloudZone and
+error.
 
 #### func (*HCloudDNS) GetRecord
 
@@ -124,23 +202,23 @@ and error. HTTP code 200 also raise error.
 func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error)
 ```
 GetRecord retrieve one single record by ID. Accepts single ID of record. Returns
-HCloudAnswerGetRecord with HCloudRecord, HTTPCode and error.
+HCloudAnswerGetRecord with HCloudRecord and error.
 
 #### func (*HCloudDNS) GetRecords
 
 ```go
-func (d *HCloudDNS) GetRecords(zoneID string) (HCloudAnswerGetRecords, error)
+func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error)
 ```
-GetRecords retrieve all records of user. Accepts zone_id as string. Returns
-HCloudAnswerGetRecords with array of HCloudRecord, Meta, HTTPCode and error.
+GetRecords retrieve all records of user. Accepts HCloudGetRecordsParams struct
+Returns HCloudAnswerGetRecords with array of HCloudRecord, Meta and error.
 
 #### func (*HCloudDNS) GetZone
 
 ```go
 func (d *HCloudDNS) GetZone(ID string) (HCloudAnswerGetZone, error)
 ```
-GetZone retrieve one single record by ID. Accepts zone ID string. Returns
-HCloudAnswerGetZone with HCloudZone, HTTPCode and error
+GetZone retrieve one single zone by ID. Accepts zone ID string. Returns
+HCloudAnswerGetZone with HCloudZone and error
 
 #### func (*HCloudDNS) GetZones
 
@@ -148,8 +226,16 @@ HCloudAnswerGetZone with HCloudZone, HTTPCode and error
 func (d *HCloudDNS) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error)
 ```
 GetZones retrieve all zones of user. Accepts exact name as string, search name
-with partial name. Returns HCloudAnswerGetZones with array of HCloudZone, Meta,
-HTTPCode and error.
+with partial name. Returns HCloudAnswerGetZones with array of HCloudZone, Meta
+and error.
+
+#### func (*HCloudDNS) ImportZoneString
+
+```go
+func (d *HCloudDNS) ImportZoneString(zoneID string, zonePlainText string) (HCloudAnswerGetZone, error)
+```
+ImportZoneString imports single zone from imported text. Accepts ID and
+zonePlainText strings. Returns HCloudAnswerGetZone with HCloudZone and error.
 
 #### func (*HCloudDNS) UpdateRecord
 
@@ -157,8 +243,7 @@ HTTPCode and error.
 func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error)
 ```
 UpdateRecord makes update of single record by ID. Accepts HCloudRecord with
-fullfilled fields. Returns HCloudAnswerGetRecord with HTTP code, HCloudRecord
-and error.
+fullfilled fields. Returns HCloudAnswerGetRecord with HCloudRecord and error.
 
 #### func (*HCloudDNS) UpdateRecordBulk
 
@@ -167,7 +252,24 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 ```
 UpdateRecordBulk updates many records at once. Accepts array of HCloudRecord,
 converting to json and makes PUT to Hetzner. Returns HCloudAnswerUpdateRecords
-with HTTPCode, arrays of HCloudRecord with updated and failed, error.
+with arrays of HCloudRecord with updated and failed, error.
+
+#### func (*HCloudDNS) UpdateZone
+
+```go
+func (d *HCloudDNS) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error)
+```
+UpdateZone makes update of single zone by ID. Accepts HCloudZone with fullfilled
+fields. Returns HCloudAnswerGetZone with HCloudZone and error.
+
+#### func (*HCloudDNS) ValidateZoneString
+
+```go
+func (d *HCloudDNS) ValidateZoneString(zonePlainText string) (HCloudAnswerZoneValidate, error)
+```
+ValidateZoneString validate single zone from imported text. Accepts ID and
+zonePlainText strings. Returns HCloudAnswerZoneValidate with HCloudZone and
+error.
 
 #### type HCloudError
 
@@ -178,6 +280,18 @@ type HCloudError struct {
 }
 ```
 
+Hetzner errors roundabout. Fuck you Hetzner.
+
+#### type HCloudGetRecordsParams
+
+```go
+type HCloudGetRecordsParams struct {
+	ZoneID  string
+	Page    string
+	PerPage string
+}
+```
+
 
 #### type HCloudGetZonesParams
 
@@ -185,8 +299,8 @@ type HCloudError struct {
 type HCloudGetZonesParams struct {
 	Name       string
 	SearchName string
-	Page       int
-	PerPage    int
+	Page       string
+	PerPage    string
 }
 ```
 
