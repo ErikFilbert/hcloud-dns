@@ -23,3 +23,8 @@ log.Println(allRecords.Error)
 ```
 
 At this moment library under development, be patient.
+
+---
+Copyright by Vladimir Smagin (21h) 2020  
+http://blindage.org email: 21h@blindage.org  
+Project page: https://git.blindage.org/21h/hcloud-dns  
