@@ -11,7 +11,7 @@ import (
 
 // GetRecord retrieve one single record by ID.
 // Accepts single ID of record.
-// Returns HCloudAnswerGetRecord with HCloudRecord, HTTPCode and error.
+// Returns HCloudAnswerGetRecord with HCloudRecord and error.
 func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 
 	client := &http.Client{}
@@ -58,8 +58,8 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 }
 
 // GetRecords retrieve all records of user.
-// Accepts zone_id as string.
-// Returns HCloudAnswerGetRecords with array of HCloudRecord, Meta, HTTPCode and error.
+// Accepts HCloudGetRecordsParams struct
+// Returns HCloudAnswerGetRecords with array of HCloudRecord, Meta and error.
 func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error) {
 
 	v := url.Values{}
@@ -123,7 +123,7 @@ func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRe
 
 // UpdateRecord makes update of single record by ID.
 // Accepts HCloudRecord with fullfilled fields.
-// Returns HCloudAnswerGetRecord with HTTP code, HCloudRecord and error.
+// Returns HCloudAnswerGetRecord with HCloudRecord and error.
 func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error) {
 
 	jsonRecordString, err := json.Marshal(record)
@@ -178,7 +178,7 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 
 // DeleteRecord remove record by ID.
 // Accepts single ID string.
-// Returns HTTP code and error.
+// Returns HCloudAnswerDeleteRecord and error.
 func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 
 	client := &http.Client{}
@@ -221,7 +221,7 @@ func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 
 // CreateRecord creates new single record.
 // Accepts HCloudRecord with record to create, of cource no ID.
-// Returns HCloudAnswerGetRecord with HTTPCode, HCloudRecord and error.
+// Returns HCloudAnswerGetRecord with HCloudRecord and error.
 func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error) {
 
 	jsonRecordString, err := json.Marshal(record)
@@ -275,8 +275,8 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 }
 
 // CreateRecordBulk creates many records at once.
-// Accepts array of HCloudRecord, converting to json and makes POST to Hetzner.
-// Returns HCloudAnswerCreateRecords with HTTPCode, arrays of HCloudRecord with whole list, valid and invalid, error.
+// Accepts array of HCloudRecord, converts it to json and makes POST to Hetzner.
+// Returns HCloudAnswerCreateRecords with arrays of HCloudRecord with whole list, valid and invalid, error.
 func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateRecords, error) {
 
 	jsonRecordString, err := json.Marshal(record)
@@ -331,7 +331,7 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 
 // UpdateRecordBulk updates many records at once.
 // Accepts array of HCloudRecord, converting to json and makes PUT to Hetzner.
-// Returns HCloudAnswerUpdateRecords with HTTPCode, arrays of HCloudRecord with updated and failed, error.
+// Returns HCloudAnswerUpdateRecords with arrays of HCloudRecord with updated and failed, error.
 func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateRecords, error) {
 
 	jsonRecordString, err := json.Marshal(record)

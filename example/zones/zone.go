@@ -25,4 +25,18 @@ func main() {
 	log.Println(zone.Zones)
 	log.Println(zone.Error)
 
+	log.Println("Export zone to plain text")
+	zonePlainText, err := hdns.ExportZoneToString("vhSHpH5mjcB2UywP9XtZGh")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(zonePlainText.ZonePlainText)
+
+	log.Println("Import zone to plain text")
+	zoneImport, err := hdns.ImportZoneString("vhSHpH5mjcB2UywP9XtZGh", zonePlainText.ZonePlainText)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(zoneImport.Zone)
+
 }

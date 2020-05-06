@@ -36,6 +36,12 @@ type HCloudAnswerGetZone struct {
 	Zone  HCloudZone `json:"zone,omitempty"`
 	Error HCloudError
 }
+
+type HCloudAnswerGetZonePlainText struct {
+	ZonePlainText string `json:"zone,omitempty"`
+	Error         HCloudError
+}
+
 type HCloudAnswerGetZones struct {
 	Zones []HCloudZone `json:"zones,omitempty"`
 	Meta  HCloudMeta   `json:"meta,omitempty"`
