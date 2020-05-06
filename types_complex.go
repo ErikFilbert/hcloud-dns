@@ -1,5 +1,7 @@
 package hclouddns
 
+// Records answers
+
 type HCloudAnswerGetRecord struct {
 	Record   HCloudRecord `json:"record,omitempty"`
 	Error    HCloudError  `json:"error,omitempty"`
@@ -26,4 +28,27 @@ type HCloudAnswerUpdateRecords struct {
 	InvalidRecords []HCloudRecord `json:"failed_records,omitempty"`
 	Error          HCloudError    `json:"error,omitempty"`
 	HTTPCode       int
+}
+
+// Zones answers
+
+type HCloudAnswerGetZone struct {
+	Zone     HCloudZone  `json:"zone,omitempty"`
+	Error    HCloudError `json:"error,omitempty"`
+	HTTPCode int
+}
+type HCloudAnswerGetZones struct {
+	Zones    []HCloudZone `json:"zones,omitempty"`
+	Meta     HCloudMeta   `json:"meta,omitempty"`
+	Error    HCloudError  `json:"error,omitempty"`
+	HTTPCode int
+}
+
+// Params
+
+type HCloudGetZonesParams struct {
+	Name       string
+	SearchName string
+	Page       int
+	PerPage    int
 }

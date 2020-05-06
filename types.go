@@ -49,3 +49,27 @@ type HCloudMeta struct {
 		TotalEntries int `json:"total_entries"`
 	} `json:"pagination,omitempty"`
 }
+
+type HCloudZone struct {
+	ID              string   `json:"id,omitempty"`
+	Created         string   `json:"created,omitempty"`
+	Modified        string   `json:"modified,omitempty"`
+	LegacyDNSHost   string   `json:"legacy_dns_host,omitempty"`
+	LegacyNS        []string `json:"legacy_ns,omitempty"`
+	Name            string   `json:"name,omitempty"`
+	NS              []string `json:"ns,omitempty"`
+	Owner           string   `json:"owner,omitempty"`
+	Paused          bool     `json:"paused,omitempty"`
+	Permission      string   `json:"permission,omitempty"`
+	Project         string   `json:"project,omitempty"`
+	Registrar       string   `json:"registrar,omitempty"`
+	Status          string   `json:"status,omitempty"`
+	TTL             int      `json:"ttl,omitempty"`
+	Verified        string   `json:"verified,omitempty"`
+	RecordsCount    int      `json:"records_count,omitempty"`
+	IsSecondaryDNS  bool     `json:"is_secondary_dns,omitempty"`
+	TXTverification struct {
+		Name  string `json:"name,omitempty"`
+		Token string `json:"token,omitempty"`
+	} `json:"txt_verification,omitempty"`
+}
