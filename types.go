@@ -26,8 +26,8 @@ const (
 )
 
 type HCloudError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code    int    `json:"code,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 type HCloudRecord struct {
@@ -38,7 +38,7 @@ type HCloudRecord struct {
 	ZoneID     string     `json:"zone_id"`
 	Name       string     `json:"name"`
 	Value      string     `json:"value"`
-	TTL        string     `json:"ttl"`
+	TTL        int        `json:"ttl"`
 }
 
 type HCloudMeta struct {
@@ -47,5 +47,5 @@ type HCloudMeta struct {
 		PerPage      int `json:"per_page"`
 		LastPage     int `json:"last_page"`
 		TotalEntries int `json:"total_entries"`
-	} `json:"pagination"`
+	} `json:"pagination,omitempty"`
 }

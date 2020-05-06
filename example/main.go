@@ -8,16 +8,16 @@ import (
 )
 
 func main() {
-	// Get your own token on Hetzner DNS
-	token, err := ioutil.ReadFile("token.txt") // just pass the file name
+	// Get your own token on Hetzner DNS and save in plain text file
+	token, err := ioutil.ReadFile("token.txt")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// Create new instance
+	log.Println("Create new instance")
 	hdns := hclouddns.New(string(token))
 
-	// Get zone vhSHpH5mjcB2UywP9XtZGh
+	log.Println("Get zone vhSHpH5mjcB2UywP9XtZGh")
 	allRecords, err := hdns.GetRecords("vhSHpH5mjcB2UywP9XtZGh")
 	if err != nil {
 		log.Fatalln(err)
@@ -25,12 +25,44 @@ func main() {
 	log.Println(allRecords.Records)
 	log.Println(allRecords.Error)
 
-	// Get record 1e960dc913f556d884bf01c241386103
+	log.Println("Get record 1e960dc913f556d884bf01c241386103 of this zone")
 	record, err := hdns.GetRecord("1e960dc913f556d884bf01c241386103")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	log.Println(record.Record)
 	log.Println(record.Error)
+
+	log.Println("Now update record 1e960dc913f556d884bf01c241386103")
+
+	updateRecord := record.Record
+	updateRecord.Value = "blindage.org."
+	updateRecord.RecordType = hclouddns.CNAME
+	updateRecord.TTL = 300
+
+	record, err = hdns.UpdateRecord(updateRecord)
+	if err != nil {
+		log.Println(record.Error.Code, record.Error.Message)
+		log.Fatalln(err)
+	}
+	log.Println("See result of update")
+	log.Println(record.Record)
+	log.Println(record.Error)
+
+	log.Println("And get record 1e960dc913f556d884bf01c241386103 again to be completely ensure")
+	record, err = hdns.GetRecord("1e960dc913f556d884bf01c241386103")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println(record.Record)
+	log.Println(record.Error)
+
+	log.Println("I do not like this record, want to remove it")
+	responseCode, err := hdns.DeleteRecord("1e960dc913f556d884bf01c241386103")
+	if err != nil {
+		log.Fatalln(responseCode, err)
+	}
+
+	log.Println("Now you know how to work with library")
 
 }
