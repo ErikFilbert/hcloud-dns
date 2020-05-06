@@ -18,7 +18,7 @@ func main() {
 	hdns := hclouddns.New(string(token))
 
 	log.Println("Get zone vhSHpH5mjcB2UywP9XtZGh")
-	allRecords, err := hdns.GetRecords("vhSHpH5mjcB2UywP9XtZGh")
+	allRecords, err := hdns.GetRecords(hclouddns.HCloudGetRecordsParams{ZoneID: "vhSHpH5mjcB2UywP9XtZGh"})
 	if err != nil {
 		log.Fatalln(err)
 	}

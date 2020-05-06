@@ -17,8 +17,8 @@ func main() {
 	log.Println("Create new instance")
 	hdns := hclouddns.New(string(token))
 
-	log.Println("Get zone vhSHpH5mjcB2UywP9XtZGh")
-	zone, err := hdns.GetZones(hclouddns.HCloudGetZonesParams{Name: "blindage.org"})
+	log.Println("Get zones")
+	zone, err := hdns.GetZones(hclouddns.HCloudGetZonesParams{})
 	if err != nil {
 		log.Fatalln(err)
 	}

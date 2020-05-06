@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 )
 
 // GetRecord retrieve one single record by ID.
@@ -40,7 +41,21 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 		return HCloudAnswerGetRecord{}, err
 	}
 
-	answer.HTTPCode = resp.StatusCode
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerGetRecord{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
 	return answer, nil
 
 }
@@ -48,9 +63,21 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 // GetRecords retrieve all records of user.
 // Accepts zone_id as string.
 // Returns HCloudAnswerGetRecords with array of HCloudRecord, Meta, HTTPCode and error.
-func (d *HCloudDNS) GetRecords(zoneID string) (HCloudAnswerGetRecords, error) {
+func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error) {
+
+	v := url.Values{}
+	if params.Page != "" {
+		v.Add("page", params.Page)
+	}
+	if params.PerPage != "" {
+		v.Add("per_page", params.PerPage)
+	}
+	if params.ZoneID != "" {
+		v.Add("zone_id", params.ZoneID)
+	}
+
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/records?zone_id=%v", zoneID), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/records?%v", v.Encode()), nil)
 	if err != nil {
 		return HCloudAnswerGetRecords{}, err
 	}
@@ -80,7 +107,21 @@ func (d *HCloudDNS) GetRecords(zoneID string) (HCloudAnswerGetRecords, error) {
 		return HCloudAnswerGetRecords{}, err
 	}
 
-	answer.HTTPCode = resp.StatusCode
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerGetRecords{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
 	return answer, nil
 }
 
@@ -124,7 +165,21 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 		return HCloudAnswerGetRecord{}, err
 	}
 
-	answer.HTTPCode = resp.StatusCode
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerGetRecord{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
 	return answer, nil
 
 }
@@ -196,7 +251,21 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 		return HCloudAnswerGetRecord{}, err
 	}
 
-	answer.HTTPCode = resp.StatusCode
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerGetRecord{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
 	return answer, nil
 
 }
@@ -241,7 +310,21 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 		return HCloudAnswerCreateRecords{}, err
 	}
 
-	answer.HTTPCode = resp.StatusCode
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerCreateRecords{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
 	return answer, nil
 
 }
@@ -286,7 +369,21 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 		return HCloudAnswerUpdateRecords{}, err
 	}
 
-	answer.HTTPCode = resp.StatusCode
+	// parse error
+	errorResult := HCloudAnswerError{}
+	err = json.Unmarshal([]byte(respBody), &errorResult)
+	if err != nil {
+		//ok, non-standard error, try another form
+		errorResultString := HCloudAnswerErrorString{}
+		err = json.Unmarshal([]byte(respBody), &errorResultString)
+		if err != nil {
+			return HCloudAnswerUpdateRecords{}, err
+		}
+		errorResult.Error.Message = errorResultString.Error
+		errorResult.Error.Code = resp.StatusCode
+	}
+	answer.Error = errorResult.Error
+
 	return answer, nil
 
 }

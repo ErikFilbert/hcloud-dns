@@ -25,9 +25,20 @@ const (
 	CAA   RecordType = "CAA"
 )
 
+// Hetzner errors roundabout. Fuck you Hetzner.
 type HCloudError struct {
 	Code    int    `json:"code,omitempty"`
 	Message string `json:"message,omitempty"`
+}
+
+// sometime can be returned HCloudError
+type HCloudAnswerError struct {
+	Error HCloudError `json:"error,omitempty"`
+}
+
+// or plain string
+type HCloudAnswerErrorString struct {
+	Error string `json:"error,omitempty"`
 }
 
 type HCloudRecord struct {
