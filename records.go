@@ -231,7 +231,7 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	body := bytes.NewBuffer(jsonRecordString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", record.ID), body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/records"), body)
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
