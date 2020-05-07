@@ -264,9 +264,7 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 		errorResultString := HCloudAnswerErrorString{}
 		err = json.Unmarshal([]byte(respBody), &errorResultString)
 		if err != nil {
-			err_message := HCloudError{}
-			err_message.Message = string(respBody)
-			return HCloudAnswerGetRecord{Error: err_message}, err
+			return HCloudAnswerGetRecord{}, err
 		}
 		errorResult.Error.Message = errorResultString.Error
 		errorResult.Error.Code = resp.StatusCode
