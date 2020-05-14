@@ -5,8 +5,6 @@
 
 	Project page: https://git.blindage.org/21h/hcloud-dns
 
-	License GPL v3
-
 */
 
 package hclouddns
