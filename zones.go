@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -62,7 +61,6 @@ func (d *HCloudClient) GetZone(ID string) (HCloudAnswerGetZone, error) {
 // Accepts exact name as string, search name with partial name.
 // Returns HCloudAnswerGetZones with array of HCloudZone, Meta and error.
 func (d *HCloudClient) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error) {
-	log.Println("token orig", d)
 
 	v := url.Values{}
 	if params.Name != "" {
