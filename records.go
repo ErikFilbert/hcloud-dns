@@ -12,7 +12,7 @@ import (
 // GetRecord retrieve one single record by ID.
 // Accepts single ID of record.
 // Returns HCloudAnswerGetRecord with HCloudRecord and error.
-func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
+func (d *HCloudClient) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", ID), nil)
@@ -20,7 +20,7 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 		return HCloudAnswerGetRecord{}, err
 	}
 
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -60,7 +60,7 @@ func (d *HCloudDNS) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 // GetRecords retrieve all records of user.
 // Accepts HCloudGetRecordsParams struct
 // Returns HCloudAnswerGetRecords with array of HCloudRecord, Meta and error.
-func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error) {
+func (d *HCloudClient) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error) {
 
 	v := url.Values{}
 	if params.Page != "" {
@@ -79,7 +79,7 @@ func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRe
 		return HCloudAnswerGetRecords{}, err
 	}
 
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	parseFormErr := req.ParseForm()
 	if parseFormErr != nil {
@@ -124,7 +124,7 @@ func (d *HCloudDNS) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRe
 // UpdateRecord makes update of single record by ID.
 // Accepts HCloudRecord with fullfilled fields.
 // Returns HCloudAnswerGetRecord with HCloudRecord and error.
-func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error) {
+func (d *HCloudClient) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error) {
 
 	jsonRecordString, err := json.Marshal(record)
 	if err != nil {
@@ -139,7 +139,7 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -179,7 +179,7 @@ func (d *HCloudDNS) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 // DeleteRecord remove record by ID.
 // Accepts single ID string.
 // Returns HCloudAnswerDeleteRecord and error.
-func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
+func (d *HCloudClient) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", ID), nil)
@@ -187,7 +187,7 @@ func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 		return HCloudAnswerDeleteRecord{}, err
 	}
 
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -222,7 +222,7 @@ func (d *HCloudDNS) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 // CreateRecord creates new single record.
 // Accepts HCloudRecord with record to create, of cource no ID.
 // Returns HCloudAnswerGetRecord with HCloudRecord and error.
-func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error) {
+func (d *HCloudClient) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error) {
 
 	jsonRecordString, err := json.Marshal(record)
 	if err != nil {
@@ -237,7 +237,7 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -277,7 +277,7 @@ func (d *HCloudDNS) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, er
 // CreateRecordBulk creates many records at once.
 // Accepts array of HCloudRecord, converts it to json and makes POST to Hetzner.
 // Returns HCloudAnswerCreateRecords with arrays of HCloudRecord with whole list, valid and invalid, error.
-func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateRecords, error) {
+func (d *HCloudClient) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateRecords, error) {
 
 	jsonRecordString, err := json.Marshal(record)
 	if err != nil {
@@ -292,7 +292,7 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -332,7 +332,7 @@ func (d *HCloudDNS) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateR
 // UpdateRecordBulk updates many records at once.
 // Accepts array of HCloudRecord, converting to json and makes PUT to Hetzner.
 // Returns HCloudAnswerUpdateRecords with arrays of HCloudRecord with updated and failed, error.
-func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateRecords, error) {
+func (d *HCloudClient) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateRecords, error) {
 
 	jsonRecordString, err := json.Marshal(record)
 	if err != nil {
@@ -347,7 +347,7 @@ func (d *HCloudDNS) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateR
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {

@@ -15,7 +15,7 @@ func main() {
 	}
 
 	log.Println("Create new instance")
-	hdns := hclouddns.New(string(token))
+	hdns := *hclouddns.New(string(token), &hclouddns.HCloudDNS{})
 
 	log.Println("Get zone vhSHpH5mjcB2UywP9XtZGh")
 	allRecords, err := hdns.GetRecords(hclouddns.HCloudGetRecordsParams{ZoneID: "vhSHpH5mjcB2UywP9XtZGh"})

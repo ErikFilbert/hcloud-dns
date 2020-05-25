@@ -13,14 +13,14 @@ import (
 // GetZone retrieve one single zone by ID.
 // Accepts zone ID string.
 // Returns HCloudAnswerGetZone with HCloudZone and error
-func (d *HCloudDNS) GetZone(ID string) (HCloudAnswerGetZone, error) {
+func (d *HCloudClient) GetZone(ID string) (HCloudAnswerGetZone, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v", ID), nil)
 	if err != nil {
 		return HCloudAnswerGetZone{}, err
 	}
 
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -60,7 +60,7 @@ func (d *HCloudDNS) GetZone(ID string) (HCloudAnswerGetZone, error) {
 // GetZones retrieve all zones of user.
 // Accepts exact name as string, search name with partial name.
 // Returns HCloudAnswerGetZones with array of HCloudZone, Meta and error.
-func (d *HCloudDNS) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error) {
+func (d *HCloudClient) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error) {
 
 	v := url.Values{}
 	if params.Name != "" {
@@ -82,7 +82,7 @@ func (d *HCloudDNS) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones,
 		return HCloudAnswerGetZones{}, err
 	}
 
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	parseFormErr := req.ParseForm()
 	if parseFormErr != nil {
@@ -127,7 +127,7 @@ func (d *HCloudDNS) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones,
 // UpdateZone makes update of single zone by ID.
 // Accepts HCloudZone with fullfilled fields.
 // Returns HCloudAnswerGetZone with HCloudZone and error.
-func (d *HCloudDNS) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
+func (d *HCloudClient) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
 
 	jsonZoneString, err := json.Marshal(zone)
 	if err != nil {
@@ -142,7 +142,7 @@ func (d *HCloudDNS) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -182,7 +182,7 @@ func (d *HCloudDNS) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
 // DeleteZone remove zone by ID.
 // Accepts single ID string.
 // Returns HCloudAnswerDeleteZone with error.
-func (d *HCloudDNS) DeleteZone(ID string) (HCloudAnswerDeleteZone, error) {
+func (d *HCloudClient) DeleteZone(ID string) (HCloudAnswerDeleteZone, error) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v", ID), nil)
@@ -190,7 +190,7 @@ func (d *HCloudDNS) DeleteZone(ID string) (HCloudAnswerDeleteZone, error) {
 		return HCloudAnswerDeleteZone{}, err
 	}
 
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -225,7 +225,7 @@ func (d *HCloudDNS) DeleteZone(ID string) (HCloudAnswerDeleteZone, error) {
 // CreateZone creates new single zone.
 // Accepts HCloudZone with record to create, of cource no ID.
 // Returns HCloudAnswerGetZone with HCloudZone and error.
-func (d *HCloudDNS) CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
+func (d *HCloudClient) CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
 
 	jsonZoneString, err := json.Marshal(zone)
 	if err != nil {
@@ -240,7 +240,7 @@ func (d *HCloudDNS) CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -280,7 +280,7 @@ func (d *HCloudDNS) CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error) {
 // ImportZoneString imports single zone from imported text.
 // Accepts ID and zonePlainText strings.
 // Returns HCloudAnswerGetZone with HCloudZone and error.
-func (d *HCloudDNS) ImportZoneString(zoneID string, zonePlainText string) (HCloudAnswerGetZone, error) {
+func (d *HCloudClient) ImportZoneString(zoneID string, zonePlainText string) (HCloudAnswerGetZone, error) {
 
 	body := strings.NewReader(zonePlainText)
 
@@ -291,7 +291,7 @@ func (d *HCloudDNS) ImportZoneString(zoneID string, zonePlainText string) (HClou
 	}
 
 	req.Header.Add("Content-Type", "text/plain")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -331,7 +331,7 @@ func (d *HCloudDNS) ImportZoneString(zoneID string, zonePlainText string) (HClou
 // ExportZoneToString exports single zone from imported text.
 // Accepts ID and zonePlainText strings.
 // Returns HCloudAnswerGetZonePlainText with HCloudZone and error.
-func (d *HCloudDNS) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error) {
+func (d *HCloudClient) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v/export", zoneID), nil)
@@ -340,7 +340,7 @@ func (d *HCloudDNS) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainT
 	}
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -361,7 +361,7 @@ func (d *HCloudDNS) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainT
 // ValidateZoneString validate single zone from imported text.
 // Accepts ID and zonePlainText strings.
 // Returns HCloudAnswerZoneValidate with HCloudZone and error.
-func (d *HCloudDNS) ValidateZoneString(zonePlainText string) (HCloudAnswerZoneValidate, error) {
+func (d *HCloudClient) ValidateZoneString(zonePlainText string) (HCloudAnswerZoneValidate, error) {
 
 	body := strings.NewReader(zonePlainText)
 
@@ -372,7 +372,7 @@ func (d *HCloudDNS) ValidateZoneString(zonePlainText string) (HCloudAnswerZoneVa
 	}
 
 	req.Header.Add("Content-Type", "text/plain")
-	req.Header.Add("Auth-API-Token", d.token)
+	req.Header.Add("Auth-API-Token", d.Token)
 
 	resp, err := client.Do(req)
 	if err != nil {

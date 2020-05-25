@@ -2,7 +2,6 @@ package hclouddns
 
 // Base types
 type HCloudDNS struct {
-	token  string `yaml:"token"`
 	Client HCloudClient
 }
 
@@ -26,7 +25,12 @@ const (
 	CAA   RecordType = "CAA"
 )
 
-type HCloudClient interface {
+type HCloudClient struct {
+	Token  string `yaml:"token"`
+	Client HCloudClientAdapter
+}
+
+type HCloudClientAdapter interface {
 	GetZone(ID string) (HCloudAnswerGetZone, error)
 	GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error)
 	UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error)
