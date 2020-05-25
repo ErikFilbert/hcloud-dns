@@ -2,7 +2,8 @@ package hclouddns
 
 // Base types
 type HCloudDNS struct {
-	token string `yaml:"token"`
+	token  string `yaml:"token"`
+	Client HCloudClient
 }
 
 // RecordType supported by Hetzner
@@ -24,6 +25,23 @@ const (
 	DS    RecordType = "DS"
 	CAA   RecordType = "CAA"
 )
+
+type HCloudClient interface {
+	GetZone(ID string) (HCloudAnswerGetZone, error)
+	GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error)
+	UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error)
+	DeleteZone(ID string) (HCloudAnswerDeleteZone, error)
+	CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error)
+	ImportZoneString(zoneID string, zonePlainText string) (HCloudAnswerGetZone, error)
+	ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error)
+	ValidateZoneString(zonePlainText string) (HCloudAnswerZoneValidate, error)
+	GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error)
+	UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error)
+	DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error)
+	CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error)
+	CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCreateRecords, error)
+	UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpdateRecords, error)
+}
 
 // Hetzner errors roundabout. Fuck you Hetzner.
 type HCloudError struct {
