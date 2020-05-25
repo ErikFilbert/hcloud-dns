@@ -10,9 +10,8 @@
 package hclouddns
 
 // New instance
-func New(t string, c HCloudClientAdapter) *HCloudClient {
+func New(t string) HCloudClientAdapter {
 	return &HCloudClient{
-		Client: c,
-		Token:  t,
+		Token: t,
 	}
 }

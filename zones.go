@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -61,6 +62,7 @@ func (d *HCloudClient) GetZone(ID string) (HCloudAnswerGetZone, error) {
 // Accepts exact name as string, search name with partial name.
 // Returns HCloudAnswerGetZones with array of HCloudZone, Meta and error.
 func (d *HCloudClient) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZones, error) {
+	log.Println("token orig", d)
 
 	v := url.Values{}
 	if params.Name != "" {
@@ -75,7 +77,6 @@ func (d *HCloudClient) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZon
 	if params.PerPage != "" {
 		v.Add("per_page", params.PerPage)
 	}
-
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones?%v", v.Encode()), nil)
 	if err != nil {
