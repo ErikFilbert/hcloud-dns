@@ -29,6 +29,7 @@ type HCloudClientAdapter interface {
 	ImportZoneString(zoneID string, zonePlainText string) (HCloudAnswerGetZone, error)
 	ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error)
 	ValidateZoneString(zonePlainText string) (HCloudAnswerZoneValidate, error)
+	GetRecord(ID string) (HCloudAnswerGetRecord, error)
 	GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGetRecords, error)
 	UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord, error)
 	DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error)
