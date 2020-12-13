@@ -15,7 +15,7 @@ import (
 func (d *HCloudClient) GetRecord(ID string) (HCloudAnswerGetRecord, error) {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", ID), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%v/api/v1/records/%v", d.APIserver, ID), nil)
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
@@ -74,7 +74,7 @@ func (d *HCloudClient) GetRecords(params HCloudGetRecordsParams) (HCloudAnswerGe
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/records?%v", v.Encode()), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%v/api/v1/records?%v", d.APIserver, v.Encode()), nil)
 	if err != nil {
 		return HCloudAnswerGetRecords{}, err
 	}
@@ -133,7 +133,7 @@ func (d *HCloudClient) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord,
 	body := bytes.NewBuffer(jsonRecordString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("PUT", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", record.ID), body)
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%v/api/v1/records/%v", d.APIserver, record.ID), body)
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
@@ -182,7 +182,7 @@ func (d *HCloudClient) UpdateRecord(record HCloudRecord) (HCloudAnswerGetRecord,
 func (d *HCloudClient) DeleteRecord(ID string) (HCloudAnswerDeleteRecord, error) {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("https://dns.hetzner.com/api/v1/records/%v", ID), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%v/api/v1/records/%v", d.APIserver, ID), nil)
 	if err != nil {
 		return HCloudAnswerDeleteRecord{}, err
 	}
@@ -231,7 +231,7 @@ func (d *HCloudClient) CreateRecord(record HCloudRecord) (HCloudAnswerGetRecord,
 	body := bytes.NewBuffer(jsonRecordString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/records"), body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%v/api/v1/records", d.APIserver), body)
 	if err != nil {
 		return HCloudAnswerGetRecord{}, err
 	}
@@ -286,7 +286,7 @@ func (d *HCloudClient) CreateRecordBulk(record []HCloudRecord) (HCloudAnswerCrea
 	body := bytes.NewBuffer(jsonRecordString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", "https://dns.hetzner.com/api/v1/api/v1/records/bulk", body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%v/api/v1/api/v1/records/bulk", d.APIserver), body)
 	if err != nil {
 		return HCloudAnswerCreateRecords{}, err
 	}
@@ -341,7 +341,7 @@ func (d *HCloudClient) UpdateRecordBulk(record []HCloudRecord) (HCloudAnswerUpda
 	body := bytes.NewBuffer(jsonRecordString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("PUT", "https://dns.hetzner.com/api/v1/api/v1/records/bulk", body)
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%v/api/v1/api/v1/records/bulk", d.APIserver), body)
 	if err != nil {
 		return HCloudAnswerUpdateRecords{}, err
 	}

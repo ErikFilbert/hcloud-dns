@@ -15,7 +15,7 @@ import (
 // Returns HCloudAnswerGetZone with HCloudZone and error
 func (d *HCloudClient) GetZone(ID string) (HCloudAnswerGetZone, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v", ID), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%v/api/v1/zones/%v", d.APIserver, ID), nil)
 	if err != nil {
 		return HCloudAnswerGetZone{}, err
 	}
@@ -76,7 +76,7 @@ func (d *HCloudClient) GetZones(params HCloudGetZonesParams) (HCloudAnswerGetZon
 		v.Add("per_page", params.PerPage)
 	}
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones?%v", v.Encode()), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%v/api/v1/zones?%v", d.APIserver, v.Encode()), nil)
 	if err != nil {
 		return HCloudAnswerGetZones{}, err
 	}
@@ -135,7 +135,7 @@ func (d *HCloudClient) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error) 
 	body := bytes.NewBuffer(jsonZoneString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("PUT", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v", zone.ID), body)
+	req, err := http.NewRequest("PUT", fmt.Sprintf("%v/api/v1/zones/%v", d.APIserver, zone.ID), body)
 	if err != nil {
 		return HCloudAnswerGetZone{}, err
 	}
@@ -184,7 +184,7 @@ func (d *HCloudClient) UpdateZone(zone HCloudZone) (HCloudAnswerGetZone, error) 
 func (d *HCloudClient) DeleteZone(ID string) (HCloudAnswerDeleteZone, error) {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v", ID), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%v/api/v1/zones/%v", d.APIserver, ID), nil)
 	if err != nil {
 		return HCloudAnswerDeleteZone{}, err
 	}
@@ -233,7 +233,7 @@ func (d *HCloudClient) CreateZone(zone HCloudZone) (HCloudAnswerGetZone, error) 
 	body := bytes.NewBuffer(jsonZoneString)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones"), body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%v/api/v1/zones", d.APIserver), body)
 	if err != nil {
 		return HCloudAnswerGetZone{}, err
 	}
@@ -284,7 +284,7 @@ func (d *HCloudClient) ImportZoneString(zoneID string, zonePlainText string) (HC
 	body := strings.NewReader(zonePlainText)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v/import", zoneID), body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%v/api/v1/zones/%v/import", d.APIserver, zoneID), body)
 	if err != nil {
 		return HCloudAnswerGetZone{}, err
 	}
@@ -333,7 +333,7 @@ func (d *HCloudClient) ImportZoneString(zoneID string, zonePlainText string) (HC
 func (d *HCloudClient) ExportZoneToString(zoneID string) (HCloudAnswerGetZonePlainText, error) {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/%v/export", zoneID), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%v/api/v1/zones/%v/export", d.APIserver, zoneID), nil)
 	if err != nil {
 		return HCloudAnswerGetZonePlainText{}, err
 	}
@@ -365,7 +365,7 @@ func (d *HCloudClient) ValidateZoneString(zonePlainText string) (HCloudAnswerZon
 	body := strings.NewReader(zonePlainText)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones/file/validate"), body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%v/api/v1/zones/file/validate", d.APIserver), body)
 	if err != nil {
 		return HCloudAnswerZoneValidate{}, err
 	}

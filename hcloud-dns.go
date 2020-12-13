@@ -12,6 +12,7 @@ package hclouddns
 // New instance
 func New(t string) HCloudClientAdapter {
 	return &HCloudClient{
-		Token: t,
+		Token:     t,
+		APIserver: "https://dns.hetzner.com",
 	}
 }

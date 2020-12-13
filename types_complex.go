@@ -33,8 +33,8 @@ type HCloudAnswerUpdateRecords struct {
 // Zones answers
 
 type HCloudAnswerGetZone struct {
-	Zone  HCloudZone `json:"zone,omitempty"`
-	Error HCloudError
+	Zone  HCloudZone  `json:"zone,omitempty"`
+	Error HCloudError `json:",omitempty"`
 }
 
 type HCloudAnswerGetZonePlainText struct {

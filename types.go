@@ -39,7 +39,8 @@ type HCloudClientAdapter interface {
 }
 
 type HCloudClient struct {
-	Token string `yaml:"token"`
+	Token     string `yaml:"token"`
+	APIserver string `yaml:"apiserver"`
 }
 
 // Hetzner errors roundabout. Fuck you Hetzner.
