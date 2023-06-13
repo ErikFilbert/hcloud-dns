@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	hclouddns "github.com/ErikFilbert/hcloud-dns"
+	hclouddns "github.com/ErikFilbert/hetzner-dns-go"
 )
 
 type mockHCloudClientAdapter interface {

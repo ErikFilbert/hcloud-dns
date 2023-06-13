@@ -1,4 +1,4 @@
-module github.com/ErikFilbert/hcloud-dns
+module github.com/ErikFilbert/hetzner-dns-go
 
 go 1.14
 

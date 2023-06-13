@@ -1,6 +1,6 @@
 # hclouddns
 --
-    import "github.com/ErikFilbert/hcloud-dns"
+    import "github.com/ErikFilbert/hetzner-dns-go"
 
 
 ## Usage
