@@ -1,6 +1,6 @@
 # hclouddns
 --
-    import "git.blindage.org/21h/hcloud-dns"
+    import "github.com/ErikFilbert/hcloud-dns"
 
 
 ## Usage

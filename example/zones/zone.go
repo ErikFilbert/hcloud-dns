@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	hclouddns "git.blindage.org/21h/hcloud-dns"
+	hclouddns "github.com/ErikFilbert/hcloud-dns"
 )
 
 type mockHCloudClientAdapter interface {
