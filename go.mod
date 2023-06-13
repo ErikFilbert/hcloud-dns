@@ -1,4 +1,4 @@
-module git.blindage.org/21h/hcloud-dns
+module github.com/ErikFilbert/hcloud-dns
 
 go 1.14
 
